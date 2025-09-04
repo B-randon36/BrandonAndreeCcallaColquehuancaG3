@@ -1,14 +1,19 @@
 package pe.edu.upeu.asistencia.servicio;
 
-import pe.edu.upeu.asistencia.modelo.Estudiante;
+import pe.edu.upeu.asistencia.modelo.Participante;
 
 import java.util.List;
 
-public interface EstudianteServicioI {
-    void save(Estudiante estudiante);
-    List<Estudiante> findAllEstudiantes();
-    Estudiante updateEstudiante(Estudiante estudiante, int index);
-    void delete(int index);
+public interface ParticipanteServicioI {
 
-    Estudiante findEstudianteById(int index);
+    void save(Participante participante); //C
+
+    List<Participante> findAll(); // R
+
+    void update(Participante participante, int index); //U
+
+    void delete(int index); //D
+
+    Participante findById(int index); //Buscar
+
 }
