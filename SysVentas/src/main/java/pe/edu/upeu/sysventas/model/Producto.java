@@ -1,6 +1,18 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package pe.edu.upeu.sysventas.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +25,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "upeu_producto")
 public class Producto {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_producto")
@@ -38,17 +51,21 @@ public class Producto {
     private Double stockOld;
     //@NotNull(message = "Categoria no puede estar vacío")
     @ManyToOne
-    @JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria", nullable = false, foreignKey = @ForeignKey(name = "FK_CATEGORIA_PRODUCTO"))
+    @JoinColumn(name = "id_categoria", referencedColumnName
+            = "id_categoria",
+            nullable = false, foreignKey = @ForeignKey(name
+            = "FK_CATEGORIA_PRODUCTO"))
     private Categoria categoria;
     //@NotNull(message = "Marca no puede estar vacío")
     @ManyToOne
-    @JoinColumn(name = "id_marca", referencedColumnName = "id_marca", nullable = false, foreignKey = @ForeignKey(name = "FK_MARCA_PRODUCTO"))
+    @JoinColumn(name = "id_marca", referencedColumnName = "id_marca",
+            nullable = false, foreignKey = @ForeignKey(name
+            = "FK_MARCA_PRODUCTO"))
     private Marca marca;
     //@NotNull(message = "Unidad Medida no puede estar vacío")
     @ManyToOne
-    @JoinColumn(name = "id_unidad", referencedColumnName = "id_unidad", nullable = false, foreignKey = @ForeignKey(name = "FK_UNIDADMEDIDA_PRODUCTO"))
+    @JoinColumn(name = "id_unidad", referencedColumnName = "id_unidad",
+            nullable = false, foreignKey = @ForeignKey(name
+            = "FK_UNIDADMEDIDA_PRODUCTO"))
     private UnidadMedida unidadMedida;
 }
-
-
-

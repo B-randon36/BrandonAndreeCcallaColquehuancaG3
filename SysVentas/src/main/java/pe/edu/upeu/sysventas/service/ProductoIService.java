@@ -6,7 +6,6 @@ import pe.edu.upeu.sysventas.model.Producto;
 import java.util.List;
 
 public interface ProductoIService {
-
     Producto save(Producto producto);
     List<Producto> findAll();
     Producto update(Producto producto);
@@ -15,4 +14,3 @@ public interface ProductoIService {
     List<ModeloDataAutocomplet> listAutoCompletProducto(String nombre);
     public List<ModeloDataAutocomplet> listAutoCompletProducto();
 }
-

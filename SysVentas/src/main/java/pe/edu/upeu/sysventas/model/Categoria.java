@@ -1,6 +1,5 @@
 package pe.edu.upeu.sysventas.model;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +19,4 @@ public class Categoria {
     private Long idCategoria;
     @Column(name = "nombre", nullable = false, length = 60)
     private String nombre;
-
-
 }
