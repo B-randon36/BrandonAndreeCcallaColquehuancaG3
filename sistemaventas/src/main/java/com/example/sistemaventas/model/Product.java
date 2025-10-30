@@ -13,8 +13,10 @@ public class Product {
     private LocalDateTime fechaEdicion;
     private LocalDateTime fechaEliminacion;
 
-    public Product(int id, String marca, int talla, String categoria, double precio, int stock, boolean eliminado,
-                   LocalDateTime fechaEdicion, LocalDateTime fechaEliminacion) {
+    public Product() {}
+
+    public Product(int id, String marca, int talla, String categoria, double precio, int stock,
+                   boolean eliminado, LocalDateTime fechaEdicion, LocalDateTime fechaEliminacion) {
         this.id = id;
         this.marca = marca;
         this.talla = talla;
@@ -27,78 +29,31 @@ public class Product {
     }
 
     public Product(String marca, int talla, String categoria, double precio, int stock) {
-        this(0, marca, talla, categoria, precio, stock, false, null, null);
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getMarca() {
-        return marca;
-    }
-
-    public int getTalla() {
-        return talla;
-    }
-
-    public String getCategoria() {
-        return categoria;
-    }
-
-    public double getPrecio() {
-        return precio;
-    }
-
-    public int getStock() {
-        return stock;
-    }
-
-    public boolean isEliminado() {
-        return eliminado;
-    }
-
-    public LocalDateTime getFechaEdicion() {
-        return fechaEdicion;
-    }
-
-    public LocalDateTime getFechaEliminacion() {
-        return fechaEliminacion;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setMarca(String marca) {
         this.marca = marca;
-    }
-
-    public void setTalla(int talla) {
         this.talla = talla;
-    }
-
-    public void setCategoria(String categoria) {
         this.categoria = categoria;
-    }
-
-    public void setPrecio(double precio) {
         this.precio = precio;
-    }
-
-    public void setStock(int stock) {
         this.stock = stock;
+        this.eliminado = false;
     }
 
-    public void setEliminado(boolean eliminado) {
-        this.eliminado = eliminado;
-    }
-
-    public void setFechaEdicion(LocalDateTime fechaEdicion) {
-        this.fechaEdicion = fechaEdicion;
-    }
-
-    public void setFechaEliminacion(LocalDateTime fechaEliminacion) {
-        this.fechaEliminacion = fechaEliminacion;
-    }
+    // Getters y setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    public String getMarca() { return marca; }
+    public void setMarca(String marca) { this.marca = marca; }
+    public int getTalla() { return talla; }
+    public void setTalla(int talla) { this.talla = talla; }
+    public String getCategoria() { return categoria; }
+    public void setCategoria(String categoria) { this.categoria = categoria; }
+    public double getPrecio() { return precio; }
+    public void setPrecio(double precio) { this.precio = precio; }
+    public int getStock() { return stock; }
+    public void setStock(int stock) { this.stock = stock; }
+    public boolean isEliminado() { return eliminado; }
+    public void setEliminado(boolean eliminado) { this.eliminado = eliminado; }
+    public LocalDateTime getFechaEdicion() { return fechaEdicion; }
+    public void setFechaEdicion(LocalDateTime fechaEdicion) { this.fechaEdicion = fechaEdicion; }
+    public LocalDateTime getFechaEliminacion() { return fechaEliminacion; }
+    public void setFechaEliminacion(LocalDateTime fechaEliminacion) { this.fechaEliminacion = fechaEliminacion; }
 }
