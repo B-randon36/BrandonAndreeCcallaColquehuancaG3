@@ -2051,3 +2051,29 @@ Caused by: java.lang.IllegalStateException: Toolkit not initialized
 2025-11-03T22:28:59.147-05:00  INFO 15436 --- [SysVentas] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2025-11-03T22:28:59.150-05:00  INFO 15436 --- [SysVentas] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2025-11-03T22:28:59.152-05:00  INFO 15436 --- [SysVentas] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-11-04T09:13:31.978-05:00  INFO 6060 --- [SysVentas] [JavaFX-Launcher] o.s.boot.SpringApplication               : Starting application using Java 24.0.2 with PID 6060 (started by SOFTWARE in C:\Users\Lab_Software\Desktop\ultimo1\BrandonAndreeCcallaColquehuancaG3\SysVentas)
+2025-11-04T09:13:31.982-05:00  INFO 6060 --- [SysVentas] [JavaFX-Launcher] o.s.boot.SpringApplication               : No active profile set, falling back to 1 default profile: "default"
+2025-11-04T09:13:32.948-05:00  INFO 6060 --- [SysVentas] [JavaFX-Launcher] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-04T09:13:33.037-05:00  INFO 6060 --- [SysVentas] [JavaFX-Launcher] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 82 ms. Found 17 JPA repository interfaces.
+2025-11-04T09:13:33.553-05:00  INFO 6060 --- [SysVentas] [JavaFX-Launcher] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-11-04T09:13:33.594-05:00  INFO 6060 --- [SysVentas] [JavaFX-Launcher] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-11-04T09:13:33.633-05:00  INFO 6060 --- [SysVentas] [JavaFX-Launcher] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-11-04T09:13:33.943-05:00  INFO 6060 --- [SysVentas] [JavaFX-Launcher] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-11-04T09:13:33.979-05:00  INFO 6060 --- [SysVentas] [JavaFX-Launcher] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-11-04T09:13:34.156-05:00  INFO 6060 --- [SysVentas] [JavaFX-Launcher] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@358e9f0e
+2025-11-04T09:13:34.158-05:00  INFO 6060 --- [SysVentas] [JavaFX-Launcher] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-11-04T09:13:34.193-05:00  INFO 6060 --- [SysVentas] [JavaFX-Launcher] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 3.46
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-11-04T09:13:35.227-05:00  INFO 6060 --- [SysVentas] [JavaFX-Launcher] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-11-04T09:13:35.261-05:00  INFO 6060 --- [SysVentas] [JavaFX-Launcher] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-11-04T09:13:35.664-05:00  INFO 6060 --- [SysVentas] [JavaFX-Launcher] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-11-04T09:13:36.880-05:00  INFO 6060 --- [SysVentas] [JavaFX-Launcher] o.s.boot.SpringApplication               : Started application in 5.421 seconds (process running for 6.219)
+2025-11-04T09:13:54.884-05:00  INFO 6060 --- [SysVentas] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-11-04T09:13:54.888-05:00  INFO 6060 --- [SysVentas] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-11-04T09:13:54.891-05:00  INFO 6060 --- [SysVentas] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
