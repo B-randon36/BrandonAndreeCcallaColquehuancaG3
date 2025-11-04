@@ -5,7 +5,6 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,7 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
+import javafx.stage.Window;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import pe.edu.upeu.sysventas.components.ColumnInfo;
@@ -21,12 +20,13 @@ import pe.edu.upeu.sysventas.components.ComboBoxAutoComplete;
 import pe.edu.upeu.sysventas.components.TableViewHelper;
 import pe.edu.upeu.sysventas.components.Toast;
 import pe.edu.upeu.sysventas.dto.ComboBoxOption;
-import pe.edu.upeu.sysventas.model.Producto;
+import pe.edu.upeu.sysventas.model.*;
 import pe.edu.upeu.sysventas.service.ICategoriaService;
 import pe.edu.upeu.sysventas.service.IMarcaService;
 import pe.edu.upeu.sysventas.service.IUnidadMedidaService;
 import pe.edu.upeu.sysventas.service.ProductoIService;
 
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -85,11 +85,11 @@ public class ProductoController {
                             return true;
                         }
                         if
-                        (producto.getMarca().getNombre().toLowerCase().contains(lowerCaseFilter)) {
+                        (producto.getMarca() != null && producto.getMarca().getNombre().toLowerCase().contains(lowerCaseFilter)) {
                             return true;
                         }
                         if
-                        (producto.getCategoria().getNombre().toLowerCase().contains(lowerCaseFilter)) {
+                        (producto.getCategoria() != null && producto.getCategoria().getNombre().toLowerCase().contains(lowerCaseFilter)) {
                             return true;
                         }
                         return false; // Si no coincide con ningún campo
@@ -116,20 +116,15 @@ public class ProductoController {
 
     @FXML
     public void initialize() {
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(2000),
-                event -> {
-                    stage = (Stage) miContenedor.getScene().getWindow();
-                    if (stage != null) {
-                        System.out.println("El título del stage es: " +
-                                stage.getTitle());
-                    } else {
-                        System.out.println("Stage aún no disponible.");
-                    }
-                }));
-        timeline.setCycleCount(1);
-        timeline.play();
+        // Forma correcta y segura de obtener el Stage
+        miContenedor.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                stage = (Stage) newScene.getWindow();
+            }
+        });
+
         cbxMarca.getItems().addAll(ms.listarCombobox());
-        cbxMarca.setOnAction(event -> {
+        /*cbxMarca.setOnAction(event -> {
             ComboBoxOption selectedProduct =
                     cbxMarca.getSelectionModel().getSelectedItem();
             if (selectedProduct != null) {
@@ -137,10 +132,10 @@ public class ProductoController {
                 System.out.println("ID del producto seleccionado: " +
                         selectedId);
             }
-        });
+        });*/
         new ComboBoxAutoComplete<>(cbxMarca);
         cbxCategoria.getItems().addAll(cs.listarCombobox());
-        cbxCategoria.setOnAction(event -> {
+        /*cbxCategoria.setOnAction(event -> {
             ComboBoxOption selectedProduct =
                     cbxCategoria.getSelectionModel().getSelectedItem();
             if (selectedProduct != null) {
@@ -148,10 +143,10 @@ public class ProductoController {
                 System.out.println("ID del producto seleccionado: " +
                         selectedId);
             }
-        });
+        });*/
         new ComboBoxAutoComplete<>(cbxCategoria);
         cbxUnidMedida.getItems().addAll(ums.listarCombobox());
-        cbxUnidMedida.setOnAction(event -> {
+        /*cbxUnidMedida.setOnAction(event -> {
             ComboBoxOption selectedProduct =
                     cbxUnidMedida.getSelectionModel().getSelectedItem();
             if (selectedProduct != null) {
@@ -159,7 +154,7 @@ public class ProductoController {
                 System.out.println("ID del producto seleccionado: " +
                         selectedId);
             }
-        });
+        });*/
         new ComboBoxAutoComplete<>(cbxUnidMedida);
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
@@ -176,12 +171,13 @@ public class ProductoController {
             editForm(producto);
         };
         Consumer<Producto> deleteAction = (Producto producto) ->
-        {System.out.println("Actualizar: " + producto);
-            ps.delete(producto.getIdProducto());
-            double with=stage.getWidth()/1.5;
-            double h=stage.getHeight()/2;
-            Toast.showToast(stage, "Se eliminó correctamente!!", 2000, with,
-                    h);
+        {
+            System.out.println("Eliminar: " + producto);
+            ps.deleteById(producto.getIdProducto());
+            Window window = tableView.getScene().getWindow();
+            if (window instanceof Stage) {
+                Toast.showToast((Stage) window, "Se eliminó correctamente!!", 2000);
+            }
             listar();
         };
         tableViewHelper.addColumnsInOrderWithSize(tableView,
@@ -309,11 +305,11 @@ public class ProductoController {
         double height = stage.getHeight() / 2;
         if (idProductoCE > 0L) {
             formulario.setIdProducto(idProductoCE);
-            ps.update(formulario);
-            Toast.showToast(stage, "Se actualizó correctamente!!", 2000, width, height);
+            ps.update(idProductoCE, formulario);
+            Toast.showToast(stage, "Se actualizó correctamente!!", 2000);
         } else {
             ps.save(formulario);
-            Toast.showToast(stage, "Se guardó correctamente!!", 2000, width, height);
+            Toast.showToast(stage, "Se guardó correctamente!!", 2000);
         }
         clearForm();
         listar();
@@ -348,4 +344,116 @@ public class ProductoController {
         }
     }
 
+    @FXML
+    public void agregarNuevaMarca() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Nueva Marca");
+        dialog.setHeaderText("Añadir una nueva marca de producto");
+        dialog.setContentText("Nombre de la marca:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(nombre -> {
+            if (!nombre.trim().isEmpty()) {
+                Marca nuevaMarca = new Marca();
+                nuevaMarca.setNombre(nombre.trim());
+                Marca marcaGuardada = ms.save(nuevaMarca);
+                refrescarComboBox(cbxMarca, ms.listarCombobox(), marcaGuardada.getIdMarca());
+                Toast.showToast(stage, "Marca '" + nombre + "' guardada.", 2000);
+            } else {
+                Toast.showToast(stage, "El nombre de la marca no puede estar vacío.", 2000);
+            }
+        });
+    }
+
+    private void refrescarComboBox(ComboBox<ComboBoxOption> comboBox, List<ComboBoxOption> items, Long idSeleccionar) {
+        comboBox.getItems().clear();
+        comboBox.getItems().addAll(items);
+        if (idSeleccionar != null) {
+            items.stream()
+                    .filter(item -> {
+                        try {
+                            return Long.parseLong(item.getKey()) == idSeleccionar;
+                        } catch (NumberFormatException e) { return false; }
+                    })
+                    .findFirst()
+                    .ifPresent(comboBox.getSelectionModel()::select);
+            new ComboBoxAutoComplete<>(comboBox); // Refrescar el autocompletado
+        }
+    }
+
+    @FXML
+    public void agregarNuevaCategoria() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Nueva Categoría");
+        dialog.setHeaderText("Añadir una nueva categoría de producto");
+        dialog.setContentText("Nombre de la categoría:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(nombre -> {
+            if (!nombre.trim().isEmpty()) {
+                Categoria nuevaCategoria = new Categoria();
+                nuevaCategoria.setNombre(nombre.trim());
+                Categoria categoriaGuardada = cs.save(nuevaCategoria);
+                refrescarComboBox(cbxCategoria, cs.listarCombobox(), categoriaGuardada.getIdCategoria());
+                Toast.showToast(stage, "Categoría '" + nombre + "' guardada.", 2000);
+            } else {
+                Toast.showToast(stage, "El nombre de la categoría no puede estar vacío.", 2000);
+            }
+        });
+    }
+
+    @FXML
+    public void eliminarMarcaSeleccionada() {
+        ComboBoxOption selectedMarca = cbxMarca.getSelectionModel().getSelectedItem();
+        if (selectedMarca == null) {
+            Toast.showToast(stage, "Por favor, seleccione una marca para eliminar.", 3000);
+            return;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmar Eliminación");
+        alert.setHeaderText("¿Está seguro de que desea eliminar la marca '" + selectedMarca.getValue() + "'?");
+        alert.setContentText("Esta acción no se puede deshacer.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                Long idMarca = Long.parseLong(selectedMarca.getKey());
+                ms.deleteById(idMarca);
+                Toast.showToast(stage, "Marca eliminada correctamente.", 2000);
+                listar(); // Actualizar la tabla de productos
+                refrescarComboBox(cbxMarca, ms.listarCombobox(), null);
+            } catch (Exception e) {
+                // Esta excepción suele ocurrir si la marca está en uso (foreign key constraint)
+                Toast.showToast(stage, "No se puede eliminar la marca. Está en uso por uno o más productos.", 4000);
+            }
+        }
+    }
+
+    @FXML
+    public void eliminarCategoriaSeleccionada() {
+        ComboBoxOption selectedCategoria = cbxCategoria.getSelectionModel().getSelectedItem();
+        if (selectedCategoria == null) {
+            Toast.showToast(stage, "Por favor, seleccione una categoría para eliminar.", 3000);
+            return;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmar Eliminación");
+        alert.setHeaderText("¿Está seguro de que desea eliminar la categoría '" + selectedCategoria.getValue() + "'?");
+        alert.setContentText("Esta acción no se puede deshacer.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                Long idCategoria = Long.parseLong(selectedCategoria.getKey());
+                cs.deleteById(idCategoria);
+                Toast.showToast(stage, "Categoría eliminada correctamente.", 2000);
+                listar(); // Actualizar la tabla de productos
+                refrescarComboBox(cbxCategoria, cs.listarCombobox(), null);
+            } catch (Exception e) {
+                Toast.showToast(stage, "No se puede eliminar la categoría. Está en uso por uno o más productos.", 4000);
+            }
+        }
+    }
 }

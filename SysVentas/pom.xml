@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>pe.edu.upeu</groupId>
-	<artifactId>SysVentas</artifactId>
+	<artifactId>sistemaderopas</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>SysVentas</name>
 	<description>Demo project for Spring Boot</description>
