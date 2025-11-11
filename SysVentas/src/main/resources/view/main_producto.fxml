@@ -135,26 +135,18 @@ Registro" textAlignment="CENTER" GridPane.columnSpan="4" GridPane.halignment="CE
                                                 <Insets right="5.0" />
                                             </GridPane.margin>
                                         </TextField>
-                                        <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5">
-                                            <children>
-                                                <ComboBox fx:id="cbxMarca" HBox.hgrow="ALWAYS" />
-                                                <Button mnemonicParsing="false" onAction="#agregarNuevaMarca" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-color: #4CAF50;" text="+" textFill="WHITE" />
-                                                <Button mnemonicParsing="false" onAction="#eliminarMarcaSeleccionada" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-color: #F44336;" text="-" textFill="WHITE" />
-                                            </children>
+                                        <ComboBox fx:id="cbxMarca" maxWidth="1.7976931348623157E308" prefHeight="26.0"
+                                                  GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5">
                                             <GridPane.margin>
                                                 <Insets right="5.0" />
                                             </GridPane.margin>
-                                        </HBox>
-                                        <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="6">
-                                            <children>
-                                                <ComboBox fx:id="cbxCategoria" HBox.hgrow="ALWAYS" />
-                                                <Button mnemonicParsing="false" onAction="#agregarNuevaCategoria" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-color: #4CAF50;" text="+" textFill="WHITE" />
-                                                <Button mnemonicParsing="false" onAction="#eliminarCategoriaSeleccionada" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-color: #F44336;" text="-" textFill="WHITE" />
-                                            </children>
+                                        </ComboBox>
+                                        <ComboBox fx:id="cbxCategoria" maxWidth="1.7976931348623157E308" prefHeight="26.0"
+                                                  prefWidth="265.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="6">
                                             <GridPane.margin>
                                                 <Insets right="5.0" />
                                             </GridPane.margin>
-                                        </HBox>
+                                        </ComboBox>
                                         <ComboBox fx:id="cbxUnidMedida" maxWidth="1.7976931348623157E308"
                                                   GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="7">
                                             <GridPane.margin>

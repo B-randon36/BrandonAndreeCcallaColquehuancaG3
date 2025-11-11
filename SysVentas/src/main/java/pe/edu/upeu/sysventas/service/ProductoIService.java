@@ -5,7 +5,12 @@ import pe.edu.upeu.sysventas.model.Producto;
 
 import java.util.List;
 
-public interface ProductoIService extends ICrudGenericoService<Producto, Long> {
+public interface ProductoIService {
+    Producto save(Producto producto);
+    List<Producto> findAll();
+    Producto update(Producto producto);
+    void delete(Long id);
+    Producto findById(Long id);
     List<ModeloDataAutocomplet> listAutoCompletProducto(String nombre);
-    List<ModeloDataAutocomplet> listAutoCompletProducto();
+    public List<ModeloDataAutocomplet> listAutoCompletProducto();
 }

@@ -19,11 +19,4 @@ public class UsuarioServiceImp extends CrudGenericoServiceImp<Usuario, Long> imp
     public Usuario loginUsuario(String user, String clave) {
         return usuarioRepository.loginUsuario(user, clave);
     }
-
-    @Override
-    public boolean verificarContraseña(Long idUsuario, String clave) {
-        return usuarioRepository.findById(idUsuario)
-                .map(usuario -> usuario.getClave().equals(clave))
-                .orElse(false);
-    }
 }

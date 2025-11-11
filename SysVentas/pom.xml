@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>pe.edu.upeu</groupId>
-	<artifactId>sistemaderopas</artifactId>
+	<artifactId>SysVentas</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>SysVentas</name>
 	<description>Demo project for Spring Boot</description>
@@ -107,12 +107,12 @@
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
-			<version>7.0.3</version>
+			<version>6.21.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-swing</artifactId>
-			<version>11-ea+24</version>
+			<version>21.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>win.zqxu</groupId>
@@ -144,7 +144,11 @@
 			<version>2.2.4</version>
 		</dependency>
 
-
+		<dependency>
+			<groupId>com.github.anastaciocintra</groupId>
+			<artifactId>escpos-coffee</artifactId>
+			<version>4.1.0</version>
+		</dependency>
 
 	</dependencies>
 

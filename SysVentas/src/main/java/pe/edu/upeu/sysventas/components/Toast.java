@@ -13,12 +13,11 @@ import javafx.util.Duration;
 
 public class Toast {
 
-    public static void showToast(Stage ownerStage, String message, int durationInMillis) {
+    public static void showToast(Stage ownerStage, String message, int durationInMillis, double x, double y) {
         // Crear una etiqueta con el mensaje del toast
         Label label = new Label(message);
-        label.setStyle("-fx-background-color: #2E7D32; -fx-text-fill: white; " // Un verde más oscuro para mejor contraste
-                + "-fx-padding: 12px; -fx-border-radius: 6px; -fx-background-radius: 6px; "
-                + "-fx-font-size: 14px; -fx-font-weight: bold;");
+        label.setStyle("-fx-background-color: #00FF99; -fx-text-fill: black; "
+                + "-fx-padding: 10px; -fx-border-radius: 5px; -fx-background-radius: 5px;");
         label.setOpacity(0);  // Inicialmente invisible
 
         // Crear un Popup para mostrar el toast
@@ -33,12 +32,8 @@ public class Toast {
         pane.setAlignment(Pos.CENTER);
         popup.getContent().add(pane);
 
-        // Calcular la posición para la esquina superior derecha
-        double toastX = ownerStage.getX() + ownerStage.getWidth() - pane.getWidth() - 20;
-        double toastY = ownerStage.getY() + 20;
-
-        // Mostrar el Popup en la posición calculada
-        popup.show(ownerStage, toastX, toastY);
+        // Mostrar el Popup en la posición personalizada (x, y)
+        popup.show(ownerStage, x, y);
 
         // Crear una animación para el toast (fade in -> esperar -> fade out)
         Timeline fadeIn = new Timeline(new KeyFrame(Duration.millis(300), new KeyValue(label.opacityProperty(), 1)));
@@ -53,9 +48,5 @@ public class Toast {
         fadeIn.setOnFinished(event -> delay.play());
         fadeOut.setOnFinished(event -> popup.hide());  // Ocultar popup al finalizar fade out
     }
-
-    // Sobrecarga para mantener compatibilidad con el código existente, aunque no se usen x e y.
-    public static void showToast(Stage ownerStage, String message, int durationInMillis, double x, double y) {
-        showToast(ownerStage, message, durationInMillis);
-    }
 }
+
