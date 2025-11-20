@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pe.edu.upeu.sysventas.dto.ModeloDataAutocomplet;
 import pe.edu.upeu.sysventas.model.Producto;
-import pe.edu.upeu.sysventas.repository.ProductoRepository;
+import pe.edu.upeu.sysventas.repository.IProductoRepository;
 import pe.edu.upeu.sysventas.service.ProductoIService;
 
 import java.util.ArrayList;
@@ -14,9 +14,9 @@ import java.util.List;
 
 @Service
 public class ProductoServiceImp implements ProductoIService {
-    private static final Logger logger =LoggerFactory.getLogger(ProductoServiceImp.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProductoServiceImp.class);
     @Autowired
-    ProductoRepository pRepo;
+    IProductoRepository pRepo;
     @Override
     public Producto save(Producto producto) {
         return pRepo.save(producto);

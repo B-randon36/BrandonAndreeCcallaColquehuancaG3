@@ -26,12 +26,13 @@ import java.util.prefs.Preferences;
 
 @Controller
 public class MainGuiController {
-
     @Autowired
     private ApplicationContext context;
+
     Preferences userPrefs = Preferences.userRoot();
-    UtilsX util = new UtilsX();
     Properties myresources = new Properties();
+
+    UtilsX util = new UtilsX();
     @Autowired
     IMenuMenuItemDao mmiDao;
     @FXML
@@ -54,7 +55,6 @@ public class MainGuiController {
                     "Estilo Verde",
                     "Estilo Rosado"
             ) );
-
     CustomMenuItem customItem = new CustomMenuItem(comboBox);
     private Menu menuIdioma=new Menu("Idioma");
     ComboBox<String> comboBoxIdioma = new ComboBox<>(
@@ -75,7 +75,6 @@ public class MainGuiController {
         bp.setCenter(tabPaneFx);
     }
 
-
     class MenuListener{
         public void menuSelected(Event e){
             if (((Menu) e.getSource()).getId().equals("mmiver1")) {
@@ -84,13 +83,14 @@ public class MainGuiController {
         }
     }
 
+
     class MenuItemListener{
 
         Map<String, String[]> menuConfig;
+
         MenuItemListener(){
             menuConfig = mmiDao.accesosAutorizados(lista);
         }
-
         public void handle(ActionEvent e){
             String id = ((MenuItem) e.getSource()).getId();
             System.out.println("Menu seleccionado: " + id);
@@ -103,6 +103,7 @@ public class MainGuiController {
                 }
             }
         }
+
         private void abrirTabConFXML(String fxmlPath, String tituloTab) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -118,12 +119,10 @@ public class MainGuiController {
                 throw new RuntimeException("Error al cargar FXML: " + fxmlPath, e);
             }
         }
-
         private void redireccionar(String fxmlPath){
             tabPaneFx.getTabs().clear();
             try {
-                FXMLLoader fxmlLoader = new
-                        FXMLLoader(getClass().getResource(fxmlPath));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
                 fxmlLoader.setControllerFactory(context::getBean);
                 parent= fxmlLoader.load();
                 Scene scene = new Scene(parent);
@@ -138,7 +137,6 @@ public class MainGuiController {
             }
         }
     }
-
 
     @FXML
     private void cambiarEstilo() {
@@ -162,7 +160,6 @@ public class MainGuiController {
             default: break;
         }
     }
-
     public int[] contarMenuMunuItem(List<MenuMenuItenTO> data) {
         int menui = 0, menuitem = 0;
         String menuN = "";
@@ -180,10 +177,11 @@ public class MainGuiController {
 
     private List<MenuMenuItenTO> listaAccesos() {
         myresources = util.detectLanguage(userPrefs.get("IDIOMAX", "es"));
-        return mmiDao.listaAccesos(SessionManager.getInstance().getUserPerfil(), myresources);
+        return mmiDao.listaAccesos(SessionManager.getInstance().getUserPerfil(),
+                myresources);
     }
 
-    private void graficarMenus() {
+    private void graficarMenus(){
         lista = listaAccesos();
         int[] mmi = contarMenuMunuItem(lista);
         Menu[] menu = new Menu[mmi[0]];
@@ -248,6 +246,8 @@ public class MainGuiController {
         System.out.println("Cambiando idioma a: " + idiomaSeleccionado);
         graficarMenus();
     }
+
+
 
 
 }

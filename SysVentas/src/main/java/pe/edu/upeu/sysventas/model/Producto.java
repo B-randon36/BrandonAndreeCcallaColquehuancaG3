@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package pe.edu.upeu.sysventas.model;
 
 import jakarta.persistence.Column;
@@ -25,6 +29,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "upeu_producto")
 public class Producto {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_producto")
@@ -48,23 +53,23 @@ public class Producto {
     @PositiveOrZero(message = "El Stock Anterior debe ser positivo o cero")
     @Column(name = "stockold", nullable = false)
     private Double stockOld;
-
     @NotNull(message = "Categoria no puede estar vacío")
     @ManyToOne
-    @JoinColumn(name = "id_categoria", referencedColumnName =
-            "id_categoria",
-            nullable = false, foreignKey = @ForeignKey(name =
-            "FK_CATEGORIA_PRODUCTO") )
+    @JoinColumn(name = "id_categoria", referencedColumnName
+            = "id_categoria",
+            nullable = false, foreignKey = @ForeignKey(name
+            = "FK_CATEGORIA_PRODUCTO"))
     private Categoria categoria;
     @NotNull(message = "Marca no puede estar vacío")
     @ManyToOne
     @JoinColumn(name = "id_marca", referencedColumnName = "id_marca",
-            nullable = false, foreignKey = @ForeignKey(name =
-            "FK_MARCA_PRODUCTO"))
+            nullable = false, foreignKey = @ForeignKey(name
+            = "FK_MARCA_PRODUCTO"))
     private Marca marca;
     @NotNull(message = "Unidad Medida no puede estar vacío")
-    @ManyToOne@JoinColumn(name = "id_unidad", referencedColumnName = "id_unidad",
-            nullable = false, foreignKey = @ForeignKey(name =
-            "FK_UNIDADMEDIDA_PRODUCTO"))
+    @ManyToOne
+    @JoinColumn(name = "id_unidad", referencedColumnName = "id_unidad",
+            nullable = false, foreignKey = @ForeignKey(name
+            = "FK_UNIDADMEDIDA_PRODUCTO"))
     private UnidadMedida unidadMedida;
 }

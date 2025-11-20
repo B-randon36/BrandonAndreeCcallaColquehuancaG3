@@ -29,7 +29,6 @@ import pe.edu.upeu.sysventas.utils.PrinterManager;
 
 import javax.print.PrintService;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -37,31 +36,30 @@ import java.util.function.Consumer;
 
 @Controller
 public class VentaController {
+
     @FXML
-    TextField autocompCliente, dniRuc, razonSocial, txtDireccion,
-            autocompProducto, nombreProducto, codigoPro, stockPro, cantidadPro, punitPro, preTPro,
-            txtBaseImp, txtIgv, txtDescuento, txtImporteT;
+    TextField autocompProducto;
+    @FXML
+    TextField nombreProducto, codigoPro, stockPro, cantidadPro, punitPro, preTPro, txtBaseImp,
+            txtIgv, txtDescuento, txtImporteT;
+    @FXML
+    Button btnRegVenta, btnRegCarrito, btnFormCliente, btnRegCliente;
+    @FXML
+    TextField autocompCliente, txtDireccion;
+    @FXML
+    TextField razonSocial;
+    @FXML
+    TextField dniRuc;
     @FXML
     TableView<VentCarrito> tableView;
-
-    @FXML
-    Button btnRegCliente, btnRegCarrito, btnRegVenta, btnImprimirVenta;
-
-    @FXML
-    AnchorPane miContenedor;
-    Stage stage;
-
-    AutoCompleteTextField actfC;
-    ModeloDataAutocomplet lastCliente;
     AutoCompleteTextField actf;
     ModeloDataAutocomplet lastProducto;
-
-    @Autowired
-    IClienteService cs;
+    AutoCompleteTextField actfC;
+    ModeloDataAutocomplet lastCliente;
     @Autowired
     ProductoIService ps;
     @Autowired
-    ConsultaDNI cDni;
+    IClienteService cs;
     @Autowired
     IVentCarritoService daoC;
     @Autowired
@@ -70,33 +68,39 @@ public class VentaController {
     IVentaService daoV;
     @Autowired
     IVentaDetalleService daoVD;
+    Stage stage;
 
+    @FXML
+    private AnchorPane miContenedor;
     private JasperPrint jasperPrint;
+    private final SortedSet<ModeloDataAutocomplet> entries = new
+            TreeSet<>((ModeloDataAutocomplet o1, ModeloDataAutocomplet o2) ->
+            o1.toString().compareTo(o2.toString()));
+    private final SortedSet<ModeloDataAutocomplet> entriesC = new
+            TreeSet<>((ModeloDataAutocomplet o1, ModeloDataAutocomplet o2) ->
+            o1.toString().compareTo(o2.toString()));
 
-    private final SortedSet<ModeloDataAutocomplet> entries=new TreeSet<>((ModeloDataAutocomplet o1, ModeloDataAutocomplet o2) ->
-            o1.toString().compareToIgnoreCase(o2.toString()));
-    private final SortedSet<ModeloDataAutocomplet> entriesC=new TreeSet<>((ModeloDataAutocomplet o1, ModeloDataAutocomplet o2) ->
-            o1.toString().compareToIgnoreCase(o2.toString()));
+    @Autowired
+    ConsultaDNI cDni;
 
     public void listarProducto(){
         entries.addAll(ps.listAutoCompletProducto());
     }
-
     public void listarCliente(){
         entriesC.clear();
         entriesC.addAll(cs.listAutoCompletCliente());
     }
-
 
     public void autoCompletarCliente(){
         actfC=new AutoCompleteTextField<>(entriesC, autocompCliente);
         autocompCliente.setOnKeyReleased(e->{
             lastCliente=(ModeloDataAutocomplet) actfC.getLastSelectedObject();
             if(lastCliente!=null){
-                dniRuc.setText(lastCliente.getIdx());
+                System.out.println(lastCliente.getNameDysplay());
                 razonSocial.setText(lastCliente.getNameDysplay());
+                dniRuc.setText(lastCliente.getIdx());
                 listar();
-            }else{
+            }else {
                 btnRegCliente.setDisable(true);
                 limpiarFormCliente();
             }
@@ -112,14 +116,15 @@ public class VentaController {
     public void listar(){
         tableView.getItems().clear();
         List<VentCarrito> lista=daoC.listaCarritoCliente(dniRuc.getText());
-        double impoTotal=0;
-        for(VentCarrito dato:lista){
-            impoTotal+=Double.parseDouble(String.valueOf(dato.getPtotal()));
+        double impoTotal = 0, igv = 0;
+        for (VentCarrito dato: lista){
+            impoTotal += Double.parseDouble(String.valueOf(dato.getPtotal()));
         }
         txtImporteT.setText(String.valueOf(impoTotal));
-        double pv=impoTotal/1.18;
-        txtBaseImp.setText(String.valueOf(Math.round(pv*100.0/100.0)));
-        txtIgv.setText(String.valueOf(Math.round((pv*0.18)*100.0)/100.0));
+        double pv = impoTotal / 1.18;
+        txtBaseImp.setText(String.valueOf(Math.round(pv * 100.0) / 100.0));
+        txtIgv.setText(String.valueOf(Math.round((pv * 0.18) * 100.0) /
+                100.0));
         tableView.getItems().addAll(lista);
     }
 
@@ -127,79 +132,84 @@ public class VentaController {
         PersonaDto p=cDni.consultarDNI(autocompCliente.getText());
         if(p!=null){
             razonSocial.setText(p.getNombre()+" "+p.getApellidoPaterno()+" "+p.getApellidoMaterno());
-            dniRuc.setText(p.getDni());
+                    dniRuc.setText(p.getDni());
             btnRegCliente.setDisable(false);
-            Toast.showToast(stage, "El cliente se encontró en RENIEC para registrar debe hacer clic en Add ", 2000, with, 50);
+            Toast.showToast(stage, "El cliente se encontró en RENIEC para registrar debe hacer clik en Add", 2000, with, 50);
         }else{
             btnRegCliente.setDisable(true);
-            Toast.showToast(stage, "El cliente no se encontró en RENIEC y debe registrar a través del formulario de cliente", 2000, with, 50);
+            Toast.showToast(stage, "El cliente no se encuentra en RENIEC y debe registrar a través del formulario de cliente", 2000, with, 50);
         }
     }
 
     @FXML
     public void buscarClienteCdni(){
         limpiarFormCliente();
-        Stage stage= StageManager.getPrimaryStage();
+        Stage stage = StageManager.getPrimaryStage();
         double with=stage.getMaxWidth()/2;
-        if(autocompCliente.getText().length()==8 || autocompCliente.getText().length()==11 ){
+        if(autocompCliente.getText().length()==8 ||
+                autocompCliente.getText().length()==11){
             try {
                 if(cs.findById(autocompCliente.getText())!=null){
                     btnRegCliente.setDisable(true);
-                    Toast.showToast(stage, "El cliente si existe", 2000, with, 50);
-                    return;
-                }
+                    Toast.showToast(stage, "El cliente si existe", 2000, with,
+                            50);
+                    return;}
                 consultarDNIReniec(with);
-            }catch (ModelNotFoundException e){
+            } catch (ModelNotFoundException e) {
                 btnRegCliente.setDisable(true);
                 Toast.showToast(stage, "El cliente no existe", 2000, with, 50);
                 consultarDNIReniec(with);
             }
         }else{
             btnRegCliente.setDisable(true);
-            Toast.showToast(stage, "El valor debe tener 8 o 11 digitos", 2000, with, 50);
+            Toast.showToast(stage, "El valor buscado debe tener 8 o 11 digitos", 2000, with, 50);
         }
     }
 
-    public void deleteReg(VentCarrito obj){
-        Alert alert=new Alert(Alert.AlertType.CONFIRMATION);
+    public void deleteReg(VentCarrito obj) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmación");
         alert.setHeaderText("Confirmar acción");
-        alert.setContentText("¿Estas seguro de eliminar el registro?");
-        Optional<ButtonType> result=alert.showAndWait();
-        if(result.isPresent() && result.get()==ButtonType.OK){
-            daoC.deleteById(obj.getIdCarrito());
-            Stage stage= StageManager.getPrimaryStage();
+        alert.setContentText("¿Estás seguro de que deseas eliminar este elemento?");
+                Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            daoC.delete(obj.getIdCarrito());
+            Stage stage = StageManager.getPrimaryStage();
             double with=stage.getMaxWidth()/2;
-            Toast.showToast(stage, "Accion completada", 2000, with, 50);
+            Toast.showToast(stage, "¡Acción completada!", 2000, with, 50);
+            listar();
+        } else {
+            System.out.println("Acción cancelada");
         }
     }
 
     public void personalizarTabla(){
-        TableViewHelper<VentCarrito> tableViewHelper=new TableViewHelper<>();
-        LinkedHashMap<String, ColumnInfo> columns=new LinkedHashMap<>();
-        columns.put("ID Prod", new ColumnInfo("producto.idProducto", 100.0));
-        columns.put("Nombre Producto", new ColumnInfo("nombreProducto", 300.0));
-        columns.put("Cantidad", new ColumnInfo("cantidad", 60.0));
-        columns.put("P. Unitario", new ColumnInfo("punitario", 100.0));
-        columns.put("P. Total", new ColumnInfo("ptotal", 100.0));
+        TableViewHelper<VentCarrito> tableViewHelper = new TableViewHelper<>();
+        LinkedHashMap<String, ColumnInfo> columns = new LinkedHashMap<>();
+        columns.put("ID Prod", new ColumnInfo("producto.idProducto", 100.0)); // Columna visible "Columna 1" mapea al campo "campo1"
+        columns.put("Nombre Producto", new ColumnInfo("nombreProducto",  300.0)); // Columna visible "Columna 1" mapea al campo "campo1"
+        columns.put("Cantidad", new ColumnInfo("cantidad", 60.0)); // Columna visible "Columna 2" mapea al campo "campo2"
+        columns.put("P.Unitario", new ColumnInfo("punitario", 100.0)); // Columna visible "Columna 2" mapea al campo "campo2"
+        columns.put("P.Total", new ColumnInfo("ptotal", 100.0)); // Columna visible "Columna 2" mapea al campo "campo2"
 
-        Consumer<VentCarrito> updateAction=(VentCarrito ventCarrito) ->{
-            System.out.println("Actualizar: "+ventCarrito);
-        };
+        Consumer<VentCarrito> updateAction = (VentCarrito ventCarrito) -> {
+            System.out.println("Actualizar: " + ventCarrito); };
+        Consumer<VentCarrito> deleteAction = (VentCarrito ventCarrito) ->
+        {deleteReg(ventCarrito); };
 
-        Consumer<VentCarrito> deleteAction=(VentCarrito ventCarrito) ->{
-            deleteReg(ventCarrito);
-        };
+        tableViewHelper.addColumnsInOrderWithSize(tableView,
+                columns,updateAction, deleteAction );
 
-        tableViewHelper.addColumnsInOrderWithSize(tableView, columns, updateAction, deleteAction);
         tableView.setTableMenuButtonVisible(true);
     }
 
 
     @FXML
     public void initialize(){
-        Platform.runLater(()->{
-            stage=(Stage) miContenedor.getScene().getWindow();
+
+        Platform.runLater(() -> {
+            stage = (Stage) miContenedor.getScene().getWindow();
+            System.out.println("El título del stage es: " + stage.getTitle());
         });
 
         listarCliente();
@@ -210,6 +220,7 @@ public class VentaController {
         autocompProducto.setOnKeyReleased(e->{
             lastProducto=(ModeloDataAutocomplet) actf.getLastSelectedObject();
             if(lastProducto!=null){
+                System.out.println(lastProducto.getNameDysplay());
                 nombreProducto.setText(lastProducto.getNameDysplay());
                 codigoPro.setText(lastProducto.getIdx());
                 String[] dato=lastProducto.getOtherData().split(":");
@@ -219,37 +230,41 @@ public class VentaController {
         });
 
         personalizarTabla();
-        btnRegCliente.setDisable(true);
         btnRegCarrito.setDisable(true);
+        btnRegCliente.setDisable(true);
     }
+
 
     @FXML
     public void guardarCliente(){
-        Stage stage= StageManager.getPrimaryStage();
+        Stage stage = StageManager.getPrimaryStage();
         double with=stage.getMaxWidth()/2;
         try {
-            Cliente c=Cliente.builder()
-                    .dniruc(dniRuc.getText())
+            Cliente c= Cliente.builder().dniruc(dniRuc.getText())
                     .nombres(razonSocial.getText())
                     .repLegal(razonSocial.getText())
                     .tipoDocumento(TipoDocumento.DNI)
                     .build();
             cs.save(c);
             btnRegCliente.setDisable(true);
-            Toast.showToast(stage, "Cliente registrado", 2000, with, 50);
+            Toast.showToast(stage, "El cliente se guardo satisfactoriamente!",
+                    2000, with, 50);
             listarCliente();
             listar();
-        } catch (Exception e) {
-            Toast.showToast(stage, "Error al guardar cliente", 2000, with, 50);
+        }catch (Exception e){
+            Toast.showToast(stage, "Error al guardar cliente!", 2000, with,
+                    50);
         }
     }
 
     @FXML
-    public void calcularPT(){
-        if(!cantidadPro.getText().isEmpty() || !cantidadPro.getText().equals("")){
-            double dato=Double.parseDouble(cantidadPro.getText())*Double.parseDouble(punitPro.getText());
-            preTPro.setText(String.valueOf(Math.round(dato*100.0)/100.0));
-            if(Double.parseDouble(cantidadPro.getText())>0){
+    private void calcularPT(){
+        if(!cantidadPro.getText().equals("")){
+            double
+                    dato=Double.parseDouble(punitPro.getText())*Double.parseDouble(cantidadPro.
+                    getText());
+            preTPro.setText(String.valueOf(dato));
+            if(Double.parseDouble(cantidadPro.getText())>0.0){
                 btnRegCarrito.setDisable(false);
             }else{
                 btnRegCarrito.setDisable(true);
@@ -260,9 +275,9 @@ public class VentaController {
     }
 
     @FXML
-    public void registrarCarrito(){
+    private void registarPCarrito(){
         try {
-            VentCarrito vc=VentCarrito.builder()
+            VentCarrito ss= VentCarrito.builder()
                     .dniruc(dniRuc.getText())
                     .producto(ps.findById(Long.parseLong(codigoPro.getText())))
                     .nombreProducto(nombreProducto.getText())
@@ -270,39 +285,41 @@ public class VentaController {
                     .punitario(Double.parseDouble(punitPro.getText()))
                     .ptotal(Double.parseDouble(preTPro.getText()))
                     .estado(1)
+
                     .usuario(daoU.findById(SessionManager.getInstance().getUserId()))
                     .build();
-
-            daoC.save(vc);
+            daoC.save(ss);
             listar();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
         }
     }
 
+
     @FXML
     public void registrarVenta(){
-        Locale locale=new Locale("es", "es-PE");
-        LocalDateTime date=LocalDateTime.now();
-        DateTimeFormatter formatter=DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss", locale);
-        String fechaFormateada=date.format(formatter);
+        Locale locale = new Locale("es", "es-PE");
+        LocalDateTime localDate = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss", locale);
+        String fechaFormateada = localDate.format(formatter);
         Venta to=Venta.builder()
                 .cliente(cs.findById(dniRuc.getText()))
                 .precioBase(Double.parseDouble(txtBaseImp.getText()))
                 .igv(Double.parseDouble(txtIgv.getText()))
                 .precioTotal(Double.parseDouble(txtImporteT.getText()))
+
                 .usuario(daoU.findById(SessionManager.getInstance().getUserId()))
                 .serie("V")
                 .tipoDoc("Factura")
-                .fechaGener(date.parse(fechaFormateada, formatter))
-                .numDoc("00")
+                .fechaGener(localDate.parse(fechaFormateada, formatter))
+                .numDoc("00" )
                 .build();
-        Venta idx=daoV.save(to);
-        List<VentCarrito> datosC=daoC.listaCarritoCliente(dniRuc.getText());
-        if(idx.getIdVenta()!=0 && !datosC.isEmpty()){
-            for(VentCarrito car:datosC){
-                VentaDetalle vd=VentaDetalle.builder()
-                        .venta(idx)
+        Venta idX = daoV.save(to);
+        List<VentCarrito> dd = daoC.listaCarritoCliente(dniRuc.getText());
+        if (idX.getIdVenta() != 0) {
+            for (VentCarrito car : dd) {
+                VentaDetalle vd = VentaDetalle.builder()
+                        .venta(idX)
                         .producto(ps.findById(car.producto.getIdProducto()))
                         .cantidad(car.getCantidad())
                         .descuento(0.0)
@@ -315,15 +332,20 @@ public class VentaController {
         daoC.deleteCarAll(dniRuc.getText());
         listar();
         try {
-            jasperPrint=daoV.runReport(idx.getIdVenta());
-            Platform.runLater(()->{
+            print(idX.getIdVenta());
+            jasperPrint= daoV.runReport(Long.parseLong(String.valueOf(idX.getIdVenta())));
+            Platform.runLater(() -> {
                 ReportAlert reportAlert=new ReportAlert(jasperPrint);
                 reportAlert.show();
-            }); print(idx.getIdVenta());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+                //ReportDialog reportDialog = new ReportDialog(jasperPrint);
+                //reportDialog.show();
+            });
+        }catch (Exception e){
+            System.out.println("VER:"+e.getMessage());
         }
+
     }
+
     public void print(Long idv) {
         Venta vt = daoV.findById(idv);
         try {
@@ -352,7 +374,7 @@ public class VentaController {
             escpos.writeLF(normal, "--------------------------------");
             //Detalle
             escpos.writeLF(normal, "Cant Descripción Importe");
-            int x = 1;
+            //int x = 1;
             for (VentaDetalle vd : vt.getVentaDetalles()) {
                 String punit = vd.getCantidad() + " " + vd.getProducto().getNombre() + " S/ " + vd.getSubtotal() + "";
                 escpos.writeLF(normal, punit);
@@ -379,5 +401,4 @@ public class VentaController {
             System.err.println("Error al inicializar la impresora: " + e.getMessage());
         }
     }
-
 }

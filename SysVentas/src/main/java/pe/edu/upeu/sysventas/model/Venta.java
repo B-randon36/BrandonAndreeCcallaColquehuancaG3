@@ -4,6 +4,7 @@
  */
 package pe.edu.upeu.sysventas.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -43,7 +44,7 @@ public class Venta {
     private Usuario usuario;
     @Column(name = "num_doc", nullable = false, length = 20)
     private String numDoc;
-    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "fecha_gener", nullable = false)
     private LocalDateTime fechaGener;
     @Column(name = "serie", nullable = false, length = 20)
